@@ -1,0 +1,23 @@
+{
+  "name": "crevette-bot-ts",
+  "version": "0.0.0",
+  "description": "crevette-bot-ts",
+  "main": "app.js",
+  "author": {
+    "name": ""
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.14",
+    "archiver": "^3.0.0",
+    "fs-extra": "^8.0.1",
+    "gulp": "^4.0.2",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-ssh": "^0.7.0",
+    "gulp-typescript": "^5.0.1",
+    "typescript": "^3.5.1"
+  },
+  "dependencies": {
+    "bufferutil": "^4.0.1",
+    "discord.js": "^11.5.1"
+  }
+}
