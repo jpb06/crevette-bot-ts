@@ -333,3 +333,7 @@ ASALocalRun/
 /src/configuration/current.config.json
 /src/configuration/prod.config.json
 /src/configuration/private.config.local.ts
+/dist
+/src/configuration/private.settings.local.ts
+/src/configuration/environment
+pscp.exe

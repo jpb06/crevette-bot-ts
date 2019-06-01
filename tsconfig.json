@@ -7,12 +7,16 @@
     "strictNullChecks": true,
     "noImplicitAny": true,
     "noEmitOnError": true,
-    "removeComments": true
+    "removeComments": true,
+    "lib": [
+      "dom",
+      "es7"
+    ]
   },
   "compileOnSave": false,
   "buildOnSave": false,
   "include": [
-    "sources/**/*"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules"

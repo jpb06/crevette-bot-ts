@@ -1,4 +1,4 @@
-﻿/// <binding BeforeBuild='clean, useDevConfig' AfterBuild='generatePackage, zip' Clean='clean' />
+﻿/// <binding BeforeBuild='clean, useDevConfig' AfterBuild='generatePackage, createReplaysFolder, zip' Clean='clean' />
 const gulp = require('gulp');
 
 const zipUtil = require('./build-logic/zip.util.js');
@@ -19,6 +19,10 @@ gulp.task('generatePackage', async () => {
     await fsUtil.generatePackage();
 });
 
+gulp.task('createReplaysFolder', async () => {
+    await fsUtil.createReplaysFolder();
+});
+
 gulp.task('zip', async () => {
     await zipUtil.zipDirectory('./dist', `./release/crevettebot_${pckg.version}.zip`);
 });
@@ -31,6 +35,8 @@ gulp.task('deploy', async () => {
     await fsUtil.generatePackage();
 
     await deployCommands.build();
+
+    await fsUtil.createReplaysFolder();
 
     await zipUtil.zipDirectory('./dist', `./release/crevettebot_${pckg.version}.zip`);
 

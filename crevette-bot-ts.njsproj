@@ -12,7 +12,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>0e604c75-89f0-474c-98db-a4aad5ce67d9</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>src\bot.ts</StartupFile>
+    <StartupFile>dist\js\crevettebot.js</StartupFile>
     <StartWebBrowser>False</StartWebBrowser>
     <SearchPath>
     </SearchPath>
@@ -33,26 +33,72 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="src\bot.ts" />
+    <TypeScriptCompile Include="src\crevettebot.ts" />
     <Content Include=".gitignore" />
+    <Content Include="downloadedReplays\git.keep" />
     <Content Include="package-lock.json" />
     <Content Include="package.json" />
     <Content Include="pscp.exe" />
     <Content Include="README.md" />
-    <Content Include="src\configuration\current.config.json" />
-    <Content Include="src\configuration\dev.config.json" />
-    <Content Include="src\configuration\prod.config.json" />
+    <Content Include="src\configuration\environment\current.config.json" />
+    <Content Include="src\configuration\environment\dev.config.json" />
+    <Content Include="src\configuration\environment\prod.config.json" />
+    <Content Include="src\relicchunky\relic.chunky.format.desc.md">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="tsconfig.json" />
-    <TypeScriptCompile Include="src\configuration\pivate.settings.mapping.ts" />
-    <TypeScriptCompile Include="src\configuration\private.config.local.ts" />
+    <TypeScriptCompile Include="src\configuration\bot.settings.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\configuration\private.settings.local.ts" />
+    <TypeScriptCompile Include="src\events\discord.client.ready.event.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\events\discord.error.event.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\events\discord.guild.create.event.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\events\discord.guild.delete.event.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\events\discord.message.event.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\relicchunky\relic.chunky.parser.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\relicchunky\replay.data.mapper.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\types\internal.types.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="src\typings.d.ts" />
+    <TypeScriptCompile Include="src\util\conversion.helper.ts" />
+    <TypeScriptCompile Include="src\util\embed.helper.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\util\logging.helper.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\util\files.helper.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="build-logic\" />
     <Folder Include="build-logic\private\" />
+    <Folder Include="downloadedReplays\" />
     <Folder Include="release\" />
     <Folder Include="src\" />
     <Folder Include="src\configuration\" />
+    <Folder Include="src\configuration\environment\" />
+    <Folder Include="src\events\" />
+    <Folder Include="src\types\" />
+    <Folder Include="src\relicchunky\" />
+    <Folder Include="src\util\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="build-logic\console.util.js" />

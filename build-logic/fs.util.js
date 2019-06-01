@@ -33,11 +33,15 @@ main.generatePackage = async function () {
 };
 
 main.useDevConfig = async function () {
-    await fs.copy('./sources/configuration/dev.config.json', './dist/js/configuration/current.config.json');
+    await fs.copy('./src/configuration/environment/dev.config.json', './dist/js/configuration/environment/current.config.json');
 };
 
 main.useProdConfig = async function () {
-    await fs.copy('./sources/configuration/prod.config.json', './dist/js/configuration/current.config.json');
+    await fs.copy('./src/configuration/environment/prod.config.json', './dist/js/configuration/environment/current.config.json');
 };
+
+main.createReplaysFolder = async function () {
+    await fs.mkdir('./dist/js/downloadedReplays');
+}
 
 module.exports = main;
