@@ -393,6 +393,18 @@ export abstract class ReplayDataMapper {
                 mapData.name = 'Refinery';
                 mapData.url = 'http://i.imgur.com/sFlILVy.jpg';
                 break;
+            case '2p_moonbase_mm':
+                mapData.name = 'Moon Base';
+                mapData.url = 'https://i.imgur.com/inAb8LI.jpg';
+                break;
+            case '2p_Minos_Bridge_mm_custom':
+                mapData.name = 'Minos Bridge';
+                mapData.url = 'https://i.imgur.com/mN0UN9l.jpg';
+                break;
+            case '2p_outpost_mm':
+                mapData.name = 'Outpost';
+                mapData.url = 'https://i.imgur.com/xZAVSf2.jpg';
+                break;
             default:
                 mapData.name = '';
                 mapData.url = '';
