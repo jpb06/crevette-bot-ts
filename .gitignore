@@ -337,3 +337,4 @@ ASALocalRun/
 /src/configuration/private.settings.local.ts
 /src/configuration/environment
 pscp.exe
+/project-apparatus/private/private.config.js
