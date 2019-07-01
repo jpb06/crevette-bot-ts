@@ -2,6 +2,8 @@
 
 import { ReplayDataMapper } from '../relicchunky/replay.data.mapper';
 import { MapData } from '../types/internal.types';
+import { Types, Util } from 'dowpro-replay-watcher-dal';
+import { botConfig } from './../configuration/environment/bot.config.interface';
 
 export class EmbedHelper {
     private static channel: TextChannel;
@@ -52,9 +54,7 @@ export class EmbedHelper {
 
         replayData = ReplayDataMapper.translateMapData(replayData.internalName, replayData);
 
-        var date = new Date();
-        date.setSeconds(replayData.duration);
-        var time = date.toISOString().substr(11, 8);
+        let time = this.getTime(replayData.duration);
 
         let embed = EmbedHelper.GenerateGeneric()
             .setColor(3447003)
@@ -62,7 +62,7 @@ export class EmbedHelper {
             .setDescription(`**__Map__** : ${replayData.name ? replayData.name : 'Unregistered map'}\n**__Game duration__** : ${time}`)
             .attachFile(replayLocalPath);
 
-        if (replayData.name)
+        if (replayData.url)
             embed.setThumbnail(replayData.url);
 
         let slot = 1;
@@ -83,5 +83,47 @@ export class EmbedHelper {
 
         return embed;
     }
-    
+
+    public static async notifyGameResult(
+        game: Types.QueuedReplay
+    ): Promise<RichEmbed> {
+
+        let time = this.getTime(game.Duration);
+        let folderPath = `${botConfig().gamesFilesRepositoryPath}/${game.Hash}`;
+        let fileName = await Util.FileSystem.findRecFile(folderPath);
+        let filePath = `${folderPath}/${fileName}`;
+
+        let winnerName = game.Players.filter(el => el.IsAmongWinners)[0].Name;
+
+        let mapDetails = ReplayDataMapper.getMapDetails(game.MapName);
+
+        let embed = EmbedHelper.GenerateGeneric()
+            .setColor(3447003)
+            .setAuthor(`${game.Players[0].Name} vs ${game.Players[1].Name}`, '')
+            .setDescription(`**__Map__** : ${mapDetails[0]}\n**__Game duration__** : ${time}\n**__Winner__** : ${winnerName}`)
+            .attachFile(filePath);
+        
+        if (mapDetails[1])
+            embed.setThumbnail(mapDetails[1]);
+
+        let slot = 1;
+
+        game.Players.forEach(player => {
+            embed.addField(`Player ${slot}`, `**__${player.Name}__** : ${ReplayDataMapper.mapRace(player.Race)} (${player.EloRating})`);
+            slot++;
+        });
+
+        return embed;
+    }
+
+    private static getTime(
+        durationInSeconds: number
+    ): string {
+
+        let date = new Date();
+        date.setSeconds(durationInSeconds);
+        let time = date.toISOString().substr(11, 8);
+
+        return time;
+    }
 }
