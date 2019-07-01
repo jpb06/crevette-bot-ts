@@ -44,4 +44,8 @@ main.createReplaysFolder = async function () {
     await fs.mkdir('./dist/js/downloadedReplays');
 }
 
+main.createReplaysFolderForProd = async function () {
+    await fs.mkdir('./dist/downloadedReplays');
+}
+
 module.exports = main;
