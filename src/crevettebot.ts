@@ -6,7 +6,11 @@ import { GuildDeleteEvent } from './events/discord.guild.delete.event';
 import { MessageEvent } from './events/discord.message.event';
 import { GlobalErrorEvent } from './events/discord.error.event';
 
-import { PrivateConfig } from './configuration/private.settings.local';
+import { botConfig } from './configuration/environment/bot.config.interface';
+
+import { Configuration as MessageBrokerConfiguration, Queuing } from 'node-message-broker';
+
+MessageBrokerConfiguration.Setup(botConfig());
 
 const client = new Discord.Client({
     disableEveryone: true
@@ -27,4 +31,5 @@ client.on('message', async (message) => {
 client.on('error', async (error) => {
     await GlobalErrorEvent.Handle(error);
 });
-client.login(PrivateConfig.apiKey);
+client.login(botConfig().discordApiKey);
+
