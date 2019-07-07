@@ -87,8 +87,6 @@
     </TypeScriptCompile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="build-logic\" />
-    <Folder Include="build-logic\private\" />
     <Folder Include="project-apparatus\" />
     <Folder Include="project-apparatus\private\" />
     <Folder Include="downloadedReplays\" />
@@ -102,11 +100,6 @@
     <Folder Include="src\util\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="build-logic\console.util.js" />
-    <Compile Include="build-logic\deploy.commands.js" />
-    <Compile Include="build-logic\fs.util.js" />
-    <Compile Include="build-logic\private\private.config.js" />
-    <Compile Include="build-logic\zip.util.js" />
     <Compile Include="gulpfile.js">
       <SubType>Code</SubType>
     </Compile>
