@@ -15,20 +15,26 @@ export abstract class ClientReadyEvent {
             await client.user.setActivity('DoWpro', { type: 'PLAYING' });
 
             await Queuing.popFrom<Types.QueuedReplay>('incoming-games', async (game: Types.QueuedReplay) => {
-                console.log(game);
 
                 let embed = await EmbedHelper.notifyGameResult(game);
 
-                let channel = client.guilds.first().channels.find(el => el.name === 'crevette-bot-tests');
-                if (channel && channel.type === "text") {
-                    (<TextChannel>channel).send({ embed: embed });
+                if (game.ModName === 'dowpro') {
+                    let channel = client.guilds.first().channels.find(el => el.name === 'replays_official_release');
+                    if (channel && channel.type === "text") {
+                        (<TextChannel>channel).send({ embed: embed });
+                    }
+                } else if (game.ModName === 'dowprotest') {
+                    let channel = client.guilds.first().channels.find(el => el.name === 'test-version-room');
+                    if (channel && channel.type === "text") {
+                        (<TextChannel>channel).send({ embed: embed });
+                    }
                 }
-            });
 
-            //let channel = client.guilds.first().channels.find(el => el.name === 'crevette-bot-tests');
-            //if (channel && channel.type === "text") {
-            //    (<TextChannel>channel).send('uwu');
-            //}
+                //let channel = client.guilds.first().channels.find(el => el.name === 'crevette-bot-tests');
+                //if (channel && channel.type === "text") {
+                //    (<TextChannel>channel).send({ embed: embed });
+                //}
+            });
 
             // let link = generateInviteLink(client);
 
