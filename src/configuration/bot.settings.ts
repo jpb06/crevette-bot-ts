@@ -6,7 +6,7 @@
     public static replaysChannels = [
         "replays_official_release",
         "test-version-room",
-        'crevette-bot-tests'
+        "crevette-bot-tests"
     ];
     public static downloadsFolder = "downloadedReplays";
 }
