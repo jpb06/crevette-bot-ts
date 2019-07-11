@@ -1,4 +1,4 @@
-﻿import { MapData } from '../types/internal.types'
+﻿import { Types as RelicChunkyTypes } from 'relic-chunky-parser';
 
 export abstract class ReplayDataMapper {
 
@@ -514,8 +514,8 @@ export abstract class ReplayDataMapper {
 
     public static translateMapData(
         mapPath: string,
-        mapData: MapData
-    ): MapData {
+        mapData: RelicChunkyTypes.MapData
+    ): RelicChunkyTypes.MapData {
         let internalName = mapPath.substr(mapPath.lastIndexOf('\\') + 1).toLowerCase();
 
         let mapDetails = this.getMapDetails(internalName);
