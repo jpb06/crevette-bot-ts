@@ -1,7 +1,7 @@
 ﻿import { RichEmbed, TextChannel } from 'discord.js';
+import { Types as RelicChunkyTypes } from 'relic-chunky-parser';
 
 import { ReplayDataMapper } from '../relicchunky/replay.data.mapper';
-import { MapData } from '../types/internal.types';
 import { Types, Util } from 'dowpro-replay-watcher-dal';
 import { botConfig } from './../configuration/environment/bot.config.interface';
 
@@ -49,7 +49,7 @@ export class EmbedHelper {
         authorAvatarUrl: string,
         username: string,
         replayLocalPath: string,
-        replayData: MapData
+        replayData: RelicChunkyTypes.MapData
     ): RichEmbed {
 
         replayData = ReplayDataMapper.translateMapData(replayData.internalName, replayData);
@@ -100,7 +100,7 @@ export class EmbedHelper {
         let embed = EmbedHelper.GenerateGeneric()
             .setColor(3447003)
             .setAuthor(`${game.Players[0].Name} vs ${game.Players[1].Name}`, '')
-            .setDescription(`**__Map__** : ${mapDetails[0]}\n**__Game duration__** : ${time}\n**__Winner__** : ${winnerName}`)
+            .setDescription(`**__Mod__** : ${game.ModName} ${game.ModVersion}\n**__Map__** : ${mapDetails[0]}\n**__Game duration__** : ${time}\n**__Winner__** : ${winnerName}`)
             .attachFile(filePath);
         
         if (mapDetails[1])

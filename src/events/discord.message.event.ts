@@ -1,13 +1,11 @@
 ﻿import { Message, TextChannel, MessageAttachment } from 'discord.js';
+import { RelicChunkyParser, Types as RelicChunkyTypes } from 'relic-chunky-parser';
 
 import { Logger } from './../util/logging.helper';
 import { EmbedHelper } from './../util/embed.helper';
 import { FilesHelper } from './../util/files.helper';
-import { RelicChunkyParser } from './../relicchunky/relic.chunky.parser';
 
 import { BotSettings } from './../configuration/bot.settings';
-import { MapData } from '../types/internal.types';
-
 
 export abstract class MessageEvent {
 
@@ -51,7 +49,7 @@ export abstract class MessageEvent {
             let path = './' + downloadsFolder + '/' + attachment.filename;
             await FilesHelper.saveFromUrlUsingHttps(attachment.url, path);
 
-            let replayData: MapData = await RelicChunkyParser.getReplayData(path);
+            let replayData: RelicChunkyTypes.MapData = await RelicChunkyParser.getReplayData(path);
 
             attachment.message.delete().then(msg => {
                 msg.channel.send({
