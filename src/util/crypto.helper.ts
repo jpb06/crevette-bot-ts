@@ -4,6 +4,8 @@ import * as zlib from 'zlib';
 import * as path from 'path';
 import { Transform, TransformOptions } from 'stream';
 
+import { botConfig } from './../configuration/environment/bot.config.interface';
+
 function getCipherKey(
     password: string
 ): Buffer {
@@ -29,10 +31,11 @@ export async function decryptFile(
 
         // Once we’ve got the initialization vector, we can decrypt the file.
         readInitVect.on('close', () => {
-            const cipherKey = getCipherKey(password);
+            const cipherKey = Buffer.from(botConfig().CryptoKey);
+
             const readStream = fs.createReadStream(filePath, { start: 16 });
             const decipher = crypto.createDecipheriv('aes256', cipherKey, initVect);
-            const writeStream = fs.createWriteStream(filePath + '.unenc');
+            const writeStream = fs.createWriteStream(filePath + '.node.clear');
 
             readStream
                 .pipe(decipher)
@@ -58,16 +61,17 @@ export async function encryptFile(
         const initVect = crypto.randomBytes(16);
 
         // Generate a cipher key from the password.
-        const cipherKey = getCipherKey(password);
+        const cipherKey = Buffer.from(botConfig().CryptoKey);
+
         const readStream = fs.createReadStream(filePath);
         const gzip = zlib.createGzip();
         const cipher = crypto.createCipheriv('aes256', cipherKey, initVect);
         const appendInitVect = new AppendInitVect(initVect, {});
         // Create a write stream with a different file extension.
-        const writeStream = fs.createWriteStream(path.join(filePath + ".enc"));
+        const writeStream = fs.createWriteStream(path.join(filePath + ".node.enc"));
 
         readStream
-            .pipe(gzip)
+            //.pipe(gzip)
             .pipe(cipher)
             .pipe(appendInitVect)
             .pipe(writeStream);
