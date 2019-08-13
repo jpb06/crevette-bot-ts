@@ -14,7 +14,7 @@ function getCipherKey(
 
 export async function decryptFile(
     filePath: string,
-    password: string
+    password: number[]
 ): Promise<void | string> {
 
     return new Promise((resolve, reject) => {
@@ -31,11 +31,11 @@ export async function decryptFile(
 
         // Once we’ve got the initialization vector, we can decrypt the file.
         readInitVect.on('close', () => {
-            const cipherKey = Buffer.from(botConfig().CryptoKey);
+            const cipherKey = Buffer.from(password);
 
             const readStream = fs.createReadStream(filePath, { start: 16 });
             const decipher = crypto.createDecipheriv('aes256', cipherKey, initVect);
-            const writeStream = fs.createWriteStream(filePath + '.node.clear');
+            const writeStream = fs.createWriteStream(filePath + '.clear');
 
             readStream
                 .pipe(decipher)

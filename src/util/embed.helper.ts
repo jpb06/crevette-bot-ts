@@ -4,6 +4,7 @@ import { Types as RelicChunkyTypes } from 'relic-chunky-parser';
 import { ReplayDataMapper } from '../relicchunky/replay.data.mapper';
 import { Types, Util } from 'dowpro-replay-watcher-dal';
 import { botConfig } from './../configuration/environment/bot.config.interface';
+import { AlreadyExistingGameData, AlreadyExistingGamePlayer } from 'dowpro-replay-watcher-dal/typings/types/business.types';
 
 export class EmbedHelper {
     private static channel: TextChannel;
@@ -31,15 +32,38 @@ export class EmbedHelper {
         return embed;
     }
 
-    public static Error(): void {
+    public static Error(
+        description?: string
+    ): void {
+        if (description === undefined) description = 'An error occurred while processing your request';
+
         this.channel.send({
             embed: new RichEmbed()
-                .setThumbnail('https://i.imgur.com/5L7T68j.png')
+                .setThumbnail('https://i.imgur.com/iBjq4wt.png')
                 .setTimestamp(new Date())
-                .setFooter('© SaucisseNotFound Inc.', 'https://i.imgur.com/5L7T68j.png')
+                .setFooter('© SaucisseNotFound Inc.', 'http://i.imgur.com/oBBZtML.png')
                 .setColor(10684167)
                 .setTitle('Error')
-                .setDescription('An error occurred while processing your request')
+                .setDescription(description)
+        });
+    }
+
+    public static GameAlreadyAddedError(
+        mapName: string,
+        mod: string,
+        dateAdded: string,
+        players: Array<AlreadyExistingGamePlayer>
+    ): void {
+        let playersDescription = players.map(el => `- **__${el.name}__** ${ReplayDataMapper.mapRace(el.race)} ${el.isAmongWinners ? '(Winner)' : ''}`).join('\n');
+
+        this.channel.send({
+            embed: new RichEmbed()
+                .setThumbnail('https://i.imgur.com/iBjq4wt.png')
+                .setTimestamp(new Date())
+                .setFooter('© SaucisseNotFound Inc.', 'http://i.imgur.com/oBBZtML.png')
+                .setColor(10684167)
+                .setTitle('This game was already added to the ladder')
+                .setDescription(`**__Map__** : ${mapName}\n**__Mod__** : ${mod}\n**__Date added__** : ${dateAdded}\n\n${playersDescription}`)
         });
     }
     /* ---------------------------------------------------------------------------------------------------------------
@@ -90,7 +114,7 @@ export class EmbedHelper {
 
         let time = this.getTime(game.Duration);
         let folderPath = `${botConfig().gamesFilesRepositoryPath}/${game.Hash}`;
-        let fileName = await Util.FileSystem.findRecFile(folderPath);
+        let fileName = await Util.findRecFile(folderPath);
         let filePath = `${folderPath}/${fileName}`;
 
         let winnerName = game.Players.filter(el => el.IsAmongWinners)[0].Name;
