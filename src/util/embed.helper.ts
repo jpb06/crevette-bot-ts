@@ -144,10 +144,15 @@ export class EmbedHelper {
         durationInSeconds: number
     ): string {
 
-        let date = new Date();
-        date.setSeconds(durationInSeconds);
-        let time = date.toISOString().substr(11, 8);
+        let h = Math.floor(durationInSeconds / 3600);
+        let m = Math.floor((durationInSeconds - (h * 3600)) / 60);
+        let s = durationInSeconds - (h * 3600) - (m * 60);
 
-        return time;
+        let hours = h.toString().padStart(2, '0');
+        let minutes = m.toString().padStart(2, '0');
+        let seconds = s.toString().padStart(2, '0');
+        let time = `${minutes}:${seconds}`;
+
+        return h > 0 ? `${hours}:${time}` : time;
     }
 }
