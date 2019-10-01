@@ -34,4 +34,3 @@ client.on('error', async (error) => {
     await GlobalErrorEvent.Handle(error);
 });
 client.login(botConfig().discordApiKey);
-
