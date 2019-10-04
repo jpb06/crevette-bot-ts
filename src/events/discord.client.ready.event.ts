@@ -14,7 +14,7 @@ export abstract class ClientReadyEvent {
         try {
             await client.user.setActivity('DoWpro', { type: 'PLAYING' });
 
-            await Queuing.popFrom<Types.QueuedReplay>('incoming-games', async (game: Types.QueuedReplay) => {
+            await Queuing.popFrom<Types.QueuedReplay>('incoming-games', false, async (game: Types.QueuedReplay) => {
 
                 let embed = await EmbedHelper.notifyGameResult(game);
 
