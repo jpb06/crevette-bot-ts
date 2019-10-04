@@ -24,7 +24,7 @@
     "dowpro-replay-watcher-dal": "^0.3.7",
     "fs-extra": "^8.1.0",
     "moment": "^2.24.0",
-    "node-message-broker": "0.0.7",
+    "node-message-broker": "^0.1.0",
     "node-unzipper": "0.0.3",
     "relic-chunky-parser": "0.0.8",
     "uuid": "^3.3.3"
