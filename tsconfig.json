@@ -2,23 +2,29 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es6",
+    "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "./dist/js",
     "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
     "noImplicitAny": true,
     "noEmitOnError": true,
-    "removeComments": true,
+    "removeComments": true,    
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
     "lib": [
       "dom",
       "es7"
     ]
   },
   "compileOnSave": false,
-  "buildOnSave": false,
+  "buildOnSave": false,  
+  "typeRoots": [ "node_modules/@types" ],
   "include": [
     "src/**/*"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/*.spec.ts"
   ]
 }
