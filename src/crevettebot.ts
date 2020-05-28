@@ -8,14 +8,14 @@ import { GlobalErrorEvent } from './events/discord.error.event';
 
 import { botConfig } from './configuration/environment/bot.config.interface';
 
-import { Configuration as MessageBrokerConfiguration, Queuing } from 'node-message-broker';
+import { Configuration as MessageBrokerConfiguration } from 'node-message-broker';
 import { Configuration as DalConfiguration } from 'dowpro-replay-watcher-dal';
 
 MessageBrokerConfiguration.Setup(botConfig());
 DalConfiguration.Setup(botConfig());
 
 const client = new Discord.Client({
-    disableEveryone: true
+    disableMentions: "everyone"
 });
 
 client.on('ready', async () => {
@@ -28,7 +28,7 @@ client.on('guildDelete', async (guild) => {
     await GuildDeleteEvent.Handle(guild);
 });
 client.on('message', async (message) => {
-    await MessageEvent.Handle(message, client.user.username, client.user.avatarURL);
+    await MessageEvent.Handle(message, client.user as Discord.ClientUser);
 });
 client.on('error', async (error) => {
     await GlobalErrorEvent.Handle(error);

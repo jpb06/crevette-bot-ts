@@ -516,9 +516,9 @@ export abstract class ReplayDataMapper {
         mapPath: string,
         mapData: RelicChunkyTypes.MapData
     ): RelicChunkyTypes.MapData {
-        let internalName = mapPath.substr(mapPath.lastIndexOf('\\') + 1).toLowerCase();
+        const internalName = mapPath.substr(mapPath.lastIndexOf('\\') + 1).toLowerCase();
 
-        let mapDetails = this.getMapDetails(internalName);
+        const mapDetails = this.getMapDetails(internalName);
 
         mapData.name = mapDetails[0];
         mapData.url = mapDetails[1];

@@ -1,5 +1,5 @@
-﻿import { Message, TextChannel, MessageAttachment } from 'discord.js';
-import { RelicChunkyParser, Types as RelicChunkyTypes } from 'relic-chunky-parser';
+﻿import { Message, TextChannel, MessageAttachment, ClientUser } from 'discord.js';
+import { RelicChunkyParser } from 'relic-chunky-parser';
 import * as Dal from 'dowpro-replay-watcher-dal';
 import * as fs from 'fs-extra';
 import * as uuidv1 from 'uuid/v1';
@@ -17,17 +17,18 @@ export abstract class MessageEvent {
 
     public static async Handle(
         message: Message,
-        botUsername: string,
-        botAvatarUrl: string
+        user: ClientUser
     ): Promise<void> {
         try {
             // not replying to others bots; only messages in text channels should be treated
             if (message.author.bot || message.channel.type !== 'text') return;
 
-            let textChannel = <TextChannel>message.channel;
-            EmbedHelper.Setup(textChannel, botUsername, botAvatarUrl);
+            const textChannel = message.channel as TextChannel;
+            EmbedHelper.Setup(textChannel, user.username, user.avatarURL() as string);
 
-            if (message.content.startsWith(BotSettings.prefix)) { }
+            if (message.content.startsWith(BotSettings.prefix)) {
+                // Todo
+            }
             else if (BotSettings.replaysChannels.includes(textChannel.name)) {
 
                 if (message.attachments.size === 0) return;
@@ -46,16 +47,34 @@ export abstract class MessageEvent {
                 //}
                 //else { }
 
+                const userName = message.author.username;
+                const userAvatar = message.author.avatarURL() || message.author.defaultAvatarURL;
+
+                //     let isOriginalMessageDeletable = false; 
+
                 message.attachments.forEach(async (attachment) => {
-                    await MessageEvent.describeLadderEncryptedReplay(
-                        attachment,
-                        BotSettings.downloadsFolder,
-                        message.author.displayAvatarURL);
+
                     await MessageEvent.describeReplay(
+                        textChannel,
+                        message,
                         attachment,
                         BotSettings.downloadsFolder,
-                        message.author.displayAvatarURL);
+                        userName, userAvatar
+                    );
+
+                    await MessageEvent.describeLadderEncryptedReplay(
+                        textChannel,
+                        message,
+                        attachment,
+                        BotSettings.downloadsFolder
+                    );
+
+                    //if (droppedRecSent || enqueuedRecSent) isOriginalMessageDeletable = true;
                 });
+
+                //if (isOriginalMessageDeletable) {
+                //    message.delete().catch(deleteErr => Logger.Error(deleteErr.stack));
+                //}
             }
 
         } catch (error) {
@@ -64,63 +83,60 @@ export abstract class MessageEvent {
     }
 
     private static async describeReplay(
+        channel: TextChannel,
+        originalMessage: Message,
         attachment: MessageAttachment,
         downloadsFolder: string,
+        senderUsername: string,
         senderAvatarUrl: string
-    ) {
-        if (attachment.filename.substr(attachment.filename.lastIndexOf('.') + 1) === 'rec') {
+    ): Promise<void> {
+        if (attachment.name && attachment.name.substr(attachment.name.lastIndexOf('.') + 1) === 'rec') {
 
-            let path = './' + downloadsFolder + '/' + attachment.filename;
+            const path = `./${downloadsFolder}/${attachment.name}`;
             await FilesHelper.saveFromUrlUsingHttps(attachment.url, path);
 
-            let replayData = await RelicChunkyParser.getReplayData(path);
+            const replayData = await RelicChunkyParser.getReplayData(path);
             if (replayData !== undefined) {
-                attachment.message.delete().then(msg => {
-                    msg.channel.send({
-                        embed: EmbedHelper.populateReplayInfos(
-                            senderAvatarUrl,
-                            msg.author.username,
-                            path,
-                            <RelicChunkyTypes.MapData>replayData)
-                    }).then(sentMsg => {
+                originalMessage.delete().then(deletedMessage => {
+                    deletedMessage.channel.send({
+                        embed: EmbedHelper.populateReplayInfos(senderAvatarUrl, senderUsername, path, replayData)
+                    }).then(sentMessage => {
                         FilesHelper.delete(path);
                     });
-                }).catch(deleteErr => {
-                    Logger.Error(deleteErr.stack);
-                });
+                }).catch(err => Logger.Error(err.stack));
             }
-
         }
     }
 
     private static async describeLadderEncryptedReplay(
+        channel: TextChannel,
+        originalMessage: Message,
         attachment: MessageAttachment,
-        downloadsFolder: string,
-        senderAvatarUrl: string
-    ) {
-        if (attachment.filename.substr(attachment.filename.lastIndexOf('.') + 1) !== 'ladder') {
+        downloadsFolder: string
+    ): Promise<void> {
+        if (attachment.name && attachment.name.substr(attachment.name.lastIndexOf('.') + 1) !== 'ladder') {
             return;
         }
 
-        let tempFolder = uuidv1();
-        let path = `./${downloadsFolder}/${tempFolder}/${attachment.filename}`;
-        let tempFolderPath = `./${downloadsFolder}/${tempFolder}`;
+        const tempFolder = uuidv1();
+        const path = `./${downloadsFolder}/${tempFolder}/${attachment.name}`;
+        const tempFolderPath = `./${downloadsFolder}/${tempFolder}`;
 
         await fs.ensureDir(tempFolderPath);
         await FilesHelper.saveFromUrlUsingHttps(attachment.url, path);
         await CryptoHelper.decryptFile(path, botConfig().CryptoKey);
 
-        let decryptedFilePath = path + '.clear';
+        const decryptedFilePath = path + '.clear';
 
-        let result = await Dal.Business.ReadGameResultArchive(
+        const result = await Dal.Business.ReadGameResultArchive(
             tempFolder,
             decryptedFilePath,
             tempFolderPath,
             botConfig().gamesFilesRepositoryPath);
 
-        if (result.status == Dal.Types.Status.Success) {
+        if (result.status === Dal.Types.Status.Success) {
 
-            let embed = await EmbedHelper.notifyGameResult({
+            const embed = await EmbedHelper.notifyGameResult({
                 Hash: result.hash,
                 MapName: result.mapName,
                 Duration: result.duration,
@@ -129,20 +145,16 @@ export abstract class MessageEvent {
                 ModVersion: result.modVersion
             });
 
-            attachment.message.delete().then(msg => {
-                msg.channel.send({
+            originalMessage.delete().then(deletedMessage => {
+                deletedMessage.channel.send({
                     embed: embed
-                }).then(sentMsg => {
+                }).then(sentMessage => {
                     FilesHelper.delete(path);
                 });
-            }).catch(deleteErr => {
-                Logger.Error(deleteErr.stack);
-            });
+            }).catch(err => Logger.Error(err.stack));
 
             await fs.remove(tempFolderPath);
-
             return;
-
         } else {
             if (result.status === Dal.Types.Status.AlreadyExistinginGamesStore && result.alreadyExistingGameData !== undefined) {
                 EmbedHelper.GameAlreadyAddedError(

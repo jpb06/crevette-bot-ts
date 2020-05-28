@@ -4,7 +4,7 @@ export abstract class ConversionHelper {
         array: Buffer
     ): number {
 
-        let value : number = 0;
+        let value = 0;
         for (let i = array.length - 1; i >= 0; i--) {
             value = (value * 256) + array[i];
         }
@@ -16,15 +16,14 @@ export abstract class ConversionHelper {
         uintArray: Buffer
     ): string {
 
-        let encodedString: string = String.fromCharCode.apply(null, uintArray);
-        let decodedString: string = decodeURIComponent(escape(encodedString));
+        const encodedString = String.fromCharCode.apply(null, uintArray);
+        const decodedString = decodeURIComponent(escape(encodedString));
 
         return decodedString;
     }
 
     public static readUTF16String(
-        bytes: Buffer,
-        bigEndian: boolean
+        bytes: Buffer
     ): string {
         let data = '';
 
