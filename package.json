@@ -6,30 +6,33 @@
   "author": {
     "name": "jpb06"
   },
+  "scripts": {
+    "build": "tsc"
+  },
   "devDependencies": {
     "@types/fs-extra": "^7.0.0",
-    "@types/node": "^8.10.54",
+    "@types/node": "^8.10.63",
     "@types/uuid": "^3.4.5",
     "archiver": "^3.1.1",
     "gulp": "^4.0.2",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-ssh": "^0.7.0",
     "gulp-typescript": "^5.0.1",
-    "typescript": "^3.6.3"
+    "typescript": "^3.9.7"
   },
   "dependencies": {
     "axios": "^0.19.0",
     "bufferutil": "^4.0.1",
-    "discord.js": "^12.2.0",
+    "discord.js": "^12.3.1",
     "dowpro-replay-watcher-dal": "^0.3.7",
     "erlpack": "github:discordapp/erlpack",
-    "fs-extra": "^9.0.0",
-    "moment": "^2.24.0",
+    "fs-extra": "^9.0.1",
+    "moment": "^2.27.0",
     "node-message-broker": "^0.1.0",
     "node-unzipper": "0.0.3",
     "relic-chunky-parser": "0.0.8",
     "utf-8-validate": "^5.0.2",
     "uuid": "^3.3.3",
-    "zlib-sync": "^0.1.6"
+    "zlib-sync": "^0.1.7"
   }
 }
